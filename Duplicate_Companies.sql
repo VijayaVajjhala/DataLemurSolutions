@@ -15,3 +15,7 @@ on a.company_id = b.company_id
 and a.title = b.title
 and a.description = b.description
 and a.job_id <> b.job_id
+
+-- using count distinct 
+select count(*) - count(distinct company_id || title || description)
+from job_listings
