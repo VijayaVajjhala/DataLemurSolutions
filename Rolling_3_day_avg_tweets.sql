@@ -1,5 +1,5 @@
 
-
+-- Using rows between in window function
 select user_id
 ,tweet_date
 ,round(avg(tweet_count) over(partition by user_id
@@ -7,6 +7,16 @@ select user_id
                      rows between 2 preceding and current row),2) as tweet_count 
 from tweets
 
+-- Using Self join
+select a.user_id
+,a.tweet_date
+,round(avg(b.tweet_count),2) as tweet_count
+from tweets a 
+inner join tweets B 
+on a.user_id = b.user_id
+and b.tweet_date between a.tweet_date - INTERVAL '2 day' and a.tweet_date
+group by a.user_id,a.tweet_date
+order by a.user_id,a.tweet_date
 
 -- Alternative solution using lag function
 with rolling_tweets as (
@@ -24,6 +34,9 @@ select user_id
  end as tweet_count
 from rolling_tweets
 order by user_id, tweet_date
+
+
+
 
 
 
