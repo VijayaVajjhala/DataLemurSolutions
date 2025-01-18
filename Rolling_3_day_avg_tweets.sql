@@ -8,7 +8,7 @@ select user_id
 from tweets
 
 
-// Alternative solution using lag function
+-- Alternative solution using lag function
 with rolling_tweets as (
 select user_id
 ,tweet_date,tweet_count
