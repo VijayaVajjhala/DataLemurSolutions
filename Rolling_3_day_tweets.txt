@@ -1,0 +1,16 @@
+
+with rolling_tweets as (
+select user_id
+,tweet_date,tweet_count
+,lag(tweet_count,1) over(partition by user_id order by tweet_date) as prev_tweet_cnt
+,lag(tweet_count,2) over(partition by user_id order by tweet_date) as prev2_tweet_cnt
+from tweets)
+
+select user_id
+,tweet_date
+,case when prev_tweet_cnt is null then round(tweet_count/1.0,2)
+      when prev2_tweet_cnt is null then round((tweet_count + prev_tweet_cnt) /2.0,2)
+      else round((tweet_count + prev_tweet_cnt + prev2_tweet_cnt) /3.0,2)
+ end as tweet_count
+from rolling_tweets
+order by user_id, tweet_date
